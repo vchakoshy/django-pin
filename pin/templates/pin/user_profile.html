@@ -1,0 +1,31 @@
+{% load daddy_avatar%}
+{% load pin_tags %}
+<div class="ProfileHeader">
+<div class="FixedContainer row clearfix" style="">
+	<div class="ProfileInfo ProfilePanel ">
+    <a href="" class="ProfileImage">
+    	<img src="{{latest_items.0.user.email|daddy_avatar:165}}" alt="">
+	</a>
+    <div class="content">
+        <span class="profile-name">{{profile.name}}</span>
+        <p class="colormuted">{{profile.bio}}</p>
+        
+        {% if profile.website != '' %}
+        <a href="{{profile.website}}">{{profile.website}}</a>
+        {% endif %}
+        <div class="profile-actions">
+        	{% if cur_user.id != request.user.id %}
+				{% include "pin/following_box.html"%}
+			{% else %}
+			<a href="{% url user-profile-change%}" role="button" class="btn" data-toggle="modal" data-target="#profileModal">ویرایش مشخصات</a>
+
+
+			{% endif%}
+        </div>
+    </div>
+</div>
+	
+</div>
+
+</div>
+

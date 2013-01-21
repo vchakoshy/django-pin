@@ -1,0 +1,108 @@
+{% extends "base/pin.html"%}
+{% load pin_tags %}
+
+{% block extra_css%}
+<style type="text/css">
+/* thanks to http://afsaran.ir/ */
+@font-face
+{
+	font-family: farhood;
+	src: local('farhood Bold'),
+	url('{{MEDIA_URL}}/fonts/Farhood.woff') format('woff'),
+	url('{{MEDIA_URL}}/fonts/Farhood.ttf') format('truetype'),
+	url('{{MEDIA_URL}}/fonts/Farhood.eot');
+}
+</style>
+{% endblock extra_css%}
+
+{% block content %}
+
+<script type="text/javascript">
+var start_loading=0;
+</script>
+
+<div class="row row-fluid">
+	<div class="span12">
+		<div class="delneveshte well span12">
+			<div class="span8">
+			<canvas id="myCanvas" width="720" height="486" style="border:1px solid #c3c3c3;">
+				Your browser does not support the HTML5 canvas tag.
+			</canvas>
+			</div>
+			<div class="span4" id="del-images" style="float:left">
+				<div class="">
+					<img class="del-img" src="{{MEDIA_URL}}delneveshte/033.png" width="100px">
+					<img class="del-img" src="{{MEDIA_URL}}delneveshte/034.png" width="100px">
+				</div><br><br>
+				<div class="text">
+					<textarea class="span12" rows="5" id="del-text">
+						 کربلا را تو مپندار که شهریست در میان شهرها 
+						 و نامیست در میان نامها.
+						نه، کربلا حرم حق است 
+						و هیچکس را جز یاران امام حسین علیهالسلام،
+					</textarea><br><br>
+					<button class="btn btn-success"  value="preview" id="del-preview">مشاهده تغییرات</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+{% if DEBUG %}
+var base_image_src = 'http://127.0.0.1:8000';
+{% else %}
+var base_image_src = 'http://www.wisgoon.com';
+{%endif%}
+
+var c=document.getElementById("myCanvas");
+//c.dir='rtl'
+var ctx=c.getContext("2d");
+var curImage = '';
+
+function inits(){
+	//addimage(curImage);
+	txt = $("#del-text").val();
+	var x = 680;
+	var y = 90;
+	var lineheight = 60;
+	var lines = txt.split('\n');
+	
+	for (var i = 0; i<lines.length; i++){
+		addText(lines[i], x, y + (i*lineheight) );
+	}
+}
+
+function addimage(url){
+	
+	base_image = new Image();
+	base_image.src = base_image_src + url;
+	curImage=url;
+	base_image.onload = function(){
+		ctx.drawImage(base_image, 0, 0);
+		inits();
+	}
+}
+
+function addText(text, x, y){
+	ctx.lineWidth=1;
+	ctx.fillStyle="#ffffff";
+	ctx.lineStyle="#ffffff";
+	ctx.font="40pt farhood";
+	ctx.fillText(text, x, y)
+}
+
+$('#del-preview').click(function(){
+	addimage(curImage);
+	//inits();
+});
+
+$(".del-img").click(function(){
+	url = $(this).attr('src');
+	curImage = url;
+	//alert(url);
+	addimage(url);
+});
+</script>
+
+{% endblock content %}

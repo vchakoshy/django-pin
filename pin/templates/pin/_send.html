@@ -1,0 +1,98 @@
+<form method="post" class="form-horizontal" action="{% url pin-send%}" id="pin_form" >
+{% csrf_token%}
+	<div class="control-group">
+      	{{ form.errors}}
+        <label class="control-label">تصویر: </label>
+		<div class="controls">
+			<div class="uploaded-image"> </div>
+			<input type="hidden" value="" id="image_field" name="image" />
+			<div id="file-uploader">       
+			    <noscript>          
+			        <p>Please enable JavaScript to use file uploader.</p>
+			    </noscript>         
+			</div>
+		</div>
+    </div>
+	
+	<div class="control-group ">
+            
+        <label class="control-label">توضیحات: </label>
+		<div class="controls">
+			<textarea id="id_text" rows="5" cols="40" name="text"> </textarea>
+		<span class="help-inline"> </span>
+		</div>
+    </div>
+    
+    <div class="control-group">
+		<label class="control-label">آدرس:</label>
+		<div class="controls">
+			<input type="text" name="url" placeholder="URL" class="span3 ltr">
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label">برچسب ها: </label>
+		<p class="text-info">برچسب ها را با enter از یکدیگر جدا کنید</p>
+		<div class="controls">
+			<textarea id="textarea" name="tags" rows="1"></textarea>
+		</div>
+		
+	</div>
+
+<div class="form-actions">
+	<input type="submit" class="btn btn-primary" value="ذخیره" />
+</div>
+</form>
+
+{% load compress %}
+{% compress js inline%}
+<script type="text/javascript">
+var image_selected=0;
+$("#pin_form").submit(function(){
+	if(image_selected == 0){
+		alert('لطفا یک تصویر انتخاب کنید');
+		return false;
+		
+	}else{
+		return true;
+	}
+});
+
+$('#textarea').textext({ plugins: 'tags' });
+
+</script>
+
+<script>
+function createUploader(){            
+	var uploader = new qq.FileUploader({
+	element: document.getElementById('file-uploader'),
+	action: '{% url pin-upload%}',
+	debug: true,
+	multiple: false,
+	allowedExtensions : ['png','jpg'],
+	sizeLimit : 1024*1024*10,
+	messages : {
+		'typeError':'{file} برای بارگذاری مناسب نیست. تنها {extensions} فرمت ها مجاز هستند.',
+		'sizeError':'{file} بسیار حجیم است. فایل شما باید کمتر از {sizeLimit} باشد.',
+		'minSizeError':'{file} بسیار کوچک است. فایل شما باید بیشتر از {minSizeLimit} باشد.',
+		'emptyError':'{file} فایل خالی است!',
+		'onLeave':'فایل در حال بارگذاری است. در صورت ترک صفحه این عملیات لغو می شود.'},
+	showMessage:function(message){ 
+		alert(message); 
+	},
+	onComplete : function(id, fileName, responseJSON){
+		if(responseJSON.success)
+		{
+			$('#file-uploader').hide();
+            $('.uploaded-image').html('<img src="/media/pin/temp/t/'+responseJSON.file+'">');
+			$('#image_field').val(responseJSON.file);
+			image_selected=1;
+		}else{
+			alert('خطا هنگام ذخیره فایل.');
+        }
+	}
+	});           
+}
+createUploader();     
+</script>
+{%endcompress%}

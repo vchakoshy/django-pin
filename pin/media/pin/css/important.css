@@ -1,0 +1,95 @@
+body{
+	/*margin: 8px;*/
+	font-family: tahoma;
+}
+
+
+h1, h2{
+	font-size:16px;
+	font-family: "afsfont";
+	margin: 0px;
+	padding:0px;
+	line-height: 20px;
+	font-weight: normal;
+}
+
+input, button, select, textarea {
+	font-family: tahoma, Helvetica, Arial, sans-serif;
+	font-size: 12px!important;
+}
+.nav-right  {
+	float: right!important;
+}
+.nav-first{
+	margin-bottom: 0;
+}
+.nav{
+	background: #FAF7F7;
+}
+.nav a{
+	font-family: 'afsfont';
+	font-size:16px;
+}
+
+.form-horizontal .control-label {
+	float: right;
+	text-align: left;
+}
+
+.form-horizontal .controls {
+	margin-right: 160px;
+}
+
+.help-inline {
+	padding-right: 5px;
+}
+.table th, .table td {
+	text-align: right;
+}
+
+.dropdown-menu{
+	right: 0;
+	min-width: 280px;
+}
+
+#a2apage_PTZ { display:none !important; }
+
+.a2a_default_style .a2a_divider{margin: 0 20px !important; }
+
+.close{
+	float:left!important;
+	font-size: 20px!important;
+}
+
+.ltr{
+	text-align: left;
+	direction: ltr;
+}
+
+.feed-item-notportrait{
+	width: 423px!important;
+}
+.nav-second{
+	background-color: #E0E0E0!important;
+}
+/*
+#pinitem{
+	position: absolute!important;
+}*/
+
+.modal { position: absolute!important; }
+
+.popover{
+	width: 400px;
+	height: 400px;
+	
+}
+.popover-content{
+	height: 350px;
+	overflow-y: scroll;
+}
+
+.modal-body{
+	overflow-y: visible;
+	max-height: none;
+}

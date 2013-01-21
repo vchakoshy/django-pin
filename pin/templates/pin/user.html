@@ -1,0 +1,31 @@
+{% extends "base/pin.html"%}
+{% load pin_tags %}
+{%load cache %}
+
+{% block extra_js %}
+<script src="{{MEDIA_URL}}js/jquery.masonry.min.js"></script>
+{% endblock extra_js %}
+
+{%block pin-ex-nav%}
+<li class="nav-right active">
+	<a href="{%url pin-user latest_items.0.user_id %}"><h1>ارسال شده های کاربر {{latest_items.0.user|get_username}}</h1></a>
+</li>
+{%endblock pin-ex-nav%}
+
+{%block title%} - کاربر {{latest_items.0.user|get_username}} {%endblock title%}
+
+{% block content %}
+<script type="text/javascript">
+var start_loading=0;
+</script>
+
+<div id="profile" class="row row-fluid">
+	<div class="span12">
+		{% include "pin/user_profile.html"%}
+		<div id="feed-ul">
+			{% include "pin/_items.html"%}
+		</div>
+	</div>
+</div>
+{% include "pin/feed_scripts.html" %}
+{% endblock content %}

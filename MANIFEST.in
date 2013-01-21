@@ -1,0 +1,3 @@
+recursive-include pin/templates *
+recursive-include pin/templatetags *
+recursive-include pin/media *

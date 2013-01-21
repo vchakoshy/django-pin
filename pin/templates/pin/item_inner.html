@@ -1,0 +1,139 @@
+{% load pin_tags %}
+{% load daddy_avatar %}
+{% load comments %}
+{% load thumbnail %}
+
+<!-- start feed item -->
+<div class="feed-item feed-inner-item" style="" >
+	<div class="pin-item-top">
+		<div style="float: left">
+			{% if item_inner.user_id != request.user.id %}
+				{% if follow_status == 0 %}
+				<a class="btn btn-success" href="{% url pin-follow item_inner.user.id 1 %}">دنبال کردن</a>
+				{% else %}
+				<a class="btn btn-danger" href="{% url pin-follow item_inner.user.id 0 %}">قطع ارتباط</a>
+				{%endif%}
+			{% endif%}
+		</div>
+		<div style="height: 70px;">
+			<a href="{% url pin-user item_inner.user.id %}">
+				<img src="{{item_inner.user.email|daddy_avatar:50}}" style="display: inline;margin-left: 5px" >
+				<b>{{item_inner.user|get_username}}</b>
+			</a> 
+		</div>
+		
+	</div>
+	<div class="feed-inner">
+		{% thumbnail item_inner.image "603" upscale=False as im %}
+		<div class="img-block" style="height: {{im.height}}px; width: {{im.width}}px; margin: 0 auto">
+			<a href="{{MEDIA_URL}}{{item_inner.image}}" >
+			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item_inner.text|remove_newlines|truncatewords:15}}">
+			</a>
+		</div>
+		{% endthumbnail %}
+		<div class="feed-item-desc">
+			{{item_inner.text|safe|linebreaksbr}}
+		</div>
+	</div>
+	<div class="feed-item-bottom">
+		<div class="feed-item-actions">
+			<div style="float: left">
+				<a href="{% url pin-item-like item_inner.id%}" class="btn btn_like {% if user.is_authenticated%}{% user_post_like item_inner.id %}{% endif %}"> <i class="icon-heart"></i> {{item_inner.like}} </a>
+				{% if user.id == item_inner.user.id%}
+				<a href="{% url pin-item-delete item_inner.id%}" class="btn btn-danger delpost" style="margin-right: 5px"> 
+					<i class="icon-remove"></i> 
+				</a>
+<a href="{% url pin-item-edit item_inner.id%}" class="btn" style="margin-right: 5px"  data-toggle="modal" data-target="#pinitem"> 
+	<i class="icon-pencil"></i> 
+</a>
+				{% endif %}
+			</div>
+			<div class="feed-item-date">
+				{{item_inner.create|jalali_mysql_date}}
+			</div>
+			
+			<div style="direction: ltr; font-family: Arial, Helvetica, sans-serif">
+				<a rel="nofollow" target="_blank" href="{{item_inner.url}}">{{item_inner.url|get_host}}</a>
+			</div>
+			
+			
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div>
+			<legend>برچسب ها</legend>
+			<ul class="tags">
+			{% for tag in item_inner.tags.all %}
+				<li><a class="label label-info" href="{% url pin-tag tag.slug%}">{{tag.name}}</a></li> 
+			{%empty%}
+				فاقد برچسب
+			{% endfor %}
+			</ul>
+		</div>	
+	</div>
+	
+	<div class="row-fluid">
+		<div>
+			<legend>
+				علاقه مندان
+			</legend>
+			{% for like in likes%}
+			<a href="{% url pin-user like.user.id %}">
+				<img src="{{like.user.email|daddy_avatar:50}}" style="display: inline;margin-left: 5px" >
+			</a>
+			{% endfor %}
+		</div>	
+	</div>
+	<div class="row-fluid">
+		
+		
+		<div class="comments">
+		
+		<legend>
+			ارسال نظر
+		</legend>
+		<form action="{% comment_form_target %}" method="post" class="form-inline">
+{% get_comment_form for item_inner as form %}
+			{% csrf_token %}
+			<textarea id="id_comment" rows="3" cols="60" name="comment" placeholder="نظر خود را وارد کنید" ></textarea>			
+			
+	
+	
+ <input type="submit" class="btn btn-primary" name="submit" value="ارسال">
+
+			{{form.content_type}}
+			{{form.object_pk}}
+			{{form.timestamp}}
+			{{form.security_hash}}
+		</form>
+
+		<ul id="comments">
+			{% get_comment_list for item_inner as comment_list %}
+			{% for comment in comment_list %}
+			<li class="comment_box">
+				<div class="comment">
+					<div class="arrow reply_arrow icon_link"></div>
+					<div class="comment_side">
+						{% if comment.user %}
+						<div class="avatar">
+							
+							<a href="{% url pin-user comment.user.id %}">
+							<img src="{{comment.email|daddy_avatar:36}}" alt="">
+							</a>
+						</div>
+						{% endif%}
+					</div>
+					<div class="comment_main">
+						
+						<div class="comment_content">
+							{{comment.comment}}
+						</div>
+					</div>
+				</div>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	</div>
+</div>
+<!-- end feed-item -->

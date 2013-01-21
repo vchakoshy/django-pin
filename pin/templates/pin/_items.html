@@ -1,0 +1,55 @@
+{% load pin_tags%}
+{% load humanize %}
+{% load thumbnail %}
+{% load daddy_avatar%}
+
+{% spaceless %}
+{% for item in latest_items %}
+
+	<div class="feed-item" >
+		{% thumbnail item.image "192" as im %}
+		<div class="img-block" style="height: {{im.height}}px; width: {{im.width}}px">
+			<a class="pin-item-link" href="{% url pin-item item.id%}">
+			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item.text|remove_newlines|truncatewords:5}}">
+			</a>
+		</div>
+		{% endthumbnail %}
+		<p>{{item.text|safe|truncatewords:"50"|linebreaksbr}} 
+		{% if item.url %}
+		<a target="_blank" rel="nofollow" href="{{item.url}}"><i class="icon-globe"></i></a>
+		{%endif%}</p>
+		
+		
+		<div style="height: 30px;padding: 3px">
+		<img src="{{item.user.email|daddy_avatar:30}}" style="display: inline;" > 
+		<a href="{% url pin-user item.user.id %}">
+			<b style="font-size:13px;font-weight:normal;margin-right:5px;">{{item.user|get_username}}</b>
+		</a>
+		</div>
+		<div class="feed-actions">
+		<div class="sharing-actions">
+			<div class="controls controls-row">
+				<a href="{% url pin-item-like item.id%}" class="btn btn_like {% if user.is_authenticated%}{% user_post_like item.id %}{% endif %}"> <i class="icon-heart"></i> {{item.like}} </a>
+				{% if user.id == item.user.id%}
+				<a href="{% url pin-item-delete item.id%}" class="btn btn-danger delpost" style="margin-right: 5px"> 
+					<i class="icon-remove"></i> 
+				</a>
+<a href="{% url pin-item-edit item.id%}" class="btn" style="margin-right: 5px"  data-toggle="modal" data-target="#pinitem"> 
+	<i class="icon-pencil"></i> 
+</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+		{% if offset %}
+		<span data-next="{{offset}}" ></span>
+		{%else%}
+		<span data-next="{{item.timestamp}}" ></span>
+		{%endif%}
+	
+	</div>
+	{% if display_item and forloop.counter == 1 %}
+	{% include "pin/item_inner.html"%}
+	{%endif%}
+{%endfor%}
+{% endspaceless %}

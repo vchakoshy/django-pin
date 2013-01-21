@@ -1,0 +1,123 @@
+<script type="text/javascript">
+var feedobj = $('#feed-ul-v2');
+var loadingobj ;
+var a_url = a_url || "";
+var extend_query = extend_query || "";
+
+function load_posts(page) {
+    $.get(
+        a_url+'?older=' + page + '&'+extend_query,
+        function(response) {
+        	if(response==0){
+				loadingobj.hide();
+        	}else{
+				var $boxes = $(response);
+				feedobj.append( $boxes );
+				loadingobj.hide();
+				start_loading=0;
+				ana_ajax(a_url+'?older=' + page + '&'+extend_query);
+			}
+        }
+    );
+}
+
+$(window).scroll(function() {
+	loadingobj = $(".loading");
+	var break_point = $(document).height() - ($(window).height() * 2.02);
+    if ($(window).scrollTop() >= break_point) {
+    	var next_page = $('#feed-ul-v2 span:last').attr('data-next');
+        if (next_page && start_loading==0) {
+        	start_loading=1;
+            loadingobj.show();
+            load_posts(next_page);
+        }
+    }
+});
+
+
+</script>
+{% if user.is_authenticated%}
+<script type="text/javascript">
+	$(".btn_like").live('click',function(){
+		var obj = $(this);
+		obj.addClass('disabled');
+		var like_url=obj.attr('href');
+		$.ajax({
+            url: like_url,
+            success: function(html) {
+            	ret = html;
+            	
+            	var o = jQuery.parseJSON(ret);
+            	
+            	obj.html('<i class="icon-heart"></i>'+o[0].likes);
+            	obj.removeClass('disabled');
+            	
+            	if (o[0].user_act == 1){
+            		obj.addClass('btn-danger');
+            	}else{
+            		obj.removeClass('btn-danger');
+            	}
+            }
+        });
+        return false;
+	});
+	
+	var sub_exec = 0;
+	var sub_obj;
+	$(".feed-sub").click(function(){
+		if (!sub_exec){
+			sub_exec=1;
+			sub_obj = $(this);
+			sub_obj.html('صبر کنید...');
+			link = sub_obj.attr('rel');
+			$.ajax({
+				url:link,
+				success:function(res){
+					var o =jQuery.parseJSON(res);
+					
+					if (o[0].status){
+						sub_obj.removeClass('label-success');
+						sub_obj.addClass('label-inverse');
+						sub_obj.html('لغو اشتراک');
+					}else{
+						sub_obj.removeClass('label-inverse');
+						sub_obj.addClass('label-success');
+						sub_obj.html('اشتراک');
+					}
+					sub_exec=0;
+					link=0;
+					sub_obj=null;
+				}
+			});
+		}
+	});
+	$('.reportButton').live('click',function(){
+		$('.reportForm').append('<input type="hidden" value="'+this.id+'" id="feedId" name="feedId"/>');
+	});
+	$('#reportButton').live('click',function(){
+			var feedId		=	$('#feedId').val();
+			var mode 		= 	$('#id_mode').val();
+			var reportUrl	=	$('#reportUrl').val();
+			$.ajax({
+				url:reportUrl,
+				data:'&feedId='+feedId+'&mode='+mode,
+				type:'post',
+				success:function(a){
+					$('.close').trigger('click');
+				},
+				error:function(){
+					$('.close').trigger('click');
+				}
+			});
+	});
+	
+</script>
+{%else%}
+
+<script type="text/javascript">
+	$(".btn_like").live('click',function(){
+		alert('ابتدا وارد سایت شوید');
+        return false;
+	});
+</script>
+{%endif%}

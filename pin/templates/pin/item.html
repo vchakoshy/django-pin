@@ -1,0 +1,49 @@
+{% extends "base/pin.html"%}
+
+{% load pin_tags%}
+
+{% block title%} - {{item_inner.text|striptags|remove_newlines|truncatechars:66}}{% endblock title%}
+{%block description%}{{item_inner.text|striptags|remove_newlines|truncatewords:30}}{%endblock%}
+
+{% block opengraph%}
+<meta property="og:title" content="{{item_inner.text|striptags|remove_newlines|truncatechars:66}}" />
+<meta property="og:description" content="{{item_inner.text|striptags|remove_newlines|truncatewords:30}}" />
+<meta property="og:type" content="image/jpeg" />
+<meta property="og:url" content="{{ item_inner.get_host_url }}" />
+<meta property="og:image" content="{{ item_inner.get_image_absolute_url }}" />
+{% endblock opengraph%}
+
+{% block extra_js %}
+<script src="{{MEDIA_URL}}js/jquery.masonry.min.js"></script>
+{% endblock extra_js %}
+
+{% block pin-ex-nav %}
+<li class="nav-right active">
+	<a href="#"><h1 style="display: inline">{{item_inner.text|striptags|remove_newlines|truncatewords:15}}</h1></a>
+</li>
+{% endblock pin-ex-nav %}
+
+{% block content %}
+
+<script type="text/javascript">
+var start_loading=0
+</script>
+
+<div class="row row-fluid">
+	<div class="span12">
+	
+	<div id="feed-ul">
+		{% with display_item=1%}
+		{% include "pin/_items.html"%}
+		{% endwith%}
+	</div>
+	</div>
+	
+	
+</div>
+<script type="text/javascript">
+var start_loading = 1;
+</script>
+{% include "pin/feed_scripts.html" %}
+
+{% endblock content %}

@@ -1,0 +1,95 @@
+{% extends "base/pin.html"%}
+{% load pin_tags %}
+
+{% block extra_css%}
+<style type="text/css">
+/* thanks to http://afsaran.ir/ */
+@font-face
+{
+	font-family: farhood;
+	src: local('farhood Bold'),
+	url('{{MEDIA_URL}}/fonts/Farhood.woff') format('woff'),
+	url('{{MEDIA_URL}}/fonts/Farhood.ttf') format('truetype'),
+	url('{{MEDIA_URL}}/fonts/Farhood.eot');
+}
+</style>
+{% endblock extra_css%}
+
+{% block content %}
+
+<script type="text/javascript">
+var start_loading=0;
+</script>
+
+<div class="row row-fluid">
+	<div class="span12">
+		<div class="delneveshte well span12">
+			<div class="span8">
+				<div id="container-k"> </div>
+			</div>
+			<div class="span4" id="del-images" style="float:left">
+				<div class="">
+					<img class="del-img" src="{{MEDIA_URL}}delneveshte/033.png" width="100px">
+					<img class="del-img" src="{{MEDIA_URL}}delneveshte/034.png" width="100px">
+				</div><br><br>
+				<div class="text">
+					<textarea class="span12" rows="5" id="del-text">
+						 کربلا را تو مپندار که شهریست در میان شهرها 
+						 و نامیست در میان نامها.
+						نه، کربلا حرم حق است 
+						و هیچکس را جز یاران امام حسین علیهالسلام،
+					</textarea><br><br>
+					<button class="btn btn-success"  value="preview" id="del-preview">مشاهده تغییرات</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--
+<script src="{{MEDIA_URL}}js/kinetic.min.js" type="text/javascript" ></script> -->
+<script src="http://www.html5canvastutorials.com/libraries/kinetic-v4.3.0-beta2.js"></script>
+
+
+
+<script>
+var stage = new Kinetic.Stage({
+	container: 'container-k',
+    width: 720,
+    height: 486,
+    dir:'rtl',
+});
+var layer = new Kinetic.Layer();
+var imageObj = new Image();
+
+var simpleText = new Kinetic.Text({
+        x: 400,
+        y: 50,
+        text: 'بسم الله الرحمن الرحیم',
+        fontSize: 30,
+        fontFamily: 'farhood',
+        /*fill: 'green',*/
+        /*stroke: '#555',*/
+      });
+
+stage.add(layer);
+
+imageObj.onload = function() {
+	var img = new Kinetic.Image({
+    	x: 0,
+        y: 0,
+        image: imageObj,
+        /*width: 106,
+        height: 118*/
+	});
+	
+    layer.add(img);
+    layer.add(simpleText);
+    stage.add(layer);
+};
+
+$(".del-img").click(function(){
+	imageObj.src = $(this).attr('src');
+});
+</script>
+
+{% endblock content %}
