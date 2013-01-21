@@ -3,7 +3,7 @@ from setuptools import find_packages
 from distutils.core import setup
 
 
-version = '1.1.0'
+version = '1.1.1'
 
 setup(
     name = "django-pin",
@@ -11,7 +11,7 @@ setup(
     author = "vahid chakoshy",
     author_email = "vchakoshy@gmail.com",
     description = "pinterest apllication like in Django",
-    url = "http://www.wisgoon.com/",
+    url = "https://github.com/karoon/django-pin",
     packages=find_packages(),
     include_package_data = True,
     zip_safe=False,
