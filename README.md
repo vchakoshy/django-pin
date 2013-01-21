@@ -8,13 +8,13 @@ Installation
 
 Requirements::
 
-    django-user-profile ``pip install django-user-profile``
-    django-daddy-avatar ``pip install django-daddy-avatar``
+    django user profile ``pip install django-user-profile``
+    django daddy avatar ``pip install django-daddy-avatar``
     sorl thumbnail      ``pip install sorl.thumbnail``
 
 To install::
     
-    pip install django-pip
+    pip install django-pin
     
 Then add ``pin`` to your ``INSTALLED_APPS``:
 
