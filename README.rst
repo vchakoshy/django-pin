@@ -16,7 +16,7 @@ To install::
     
     pip install django-pin
     
-Then add ``pin`` to your ``INSTALLED_APPS``::
+Then add ``pin`` to your ``INSTALLED_APPS``:
 
 .. code:: python
 
@@ -26,7 +26,7 @@ Then add ``pin`` to your ``INSTALLED_APPS``::
         ...
     )
 
-In your urls.py::
+In your urls.py:
 
 .. code:: python
 
@@ -35,6 +35,7 @@ In your urls.py::
 
         # other urls ...
     )
+
 
 Live demo
 ---------
