@@ -33,6 +33,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+<<<<<<< HEAD
 
 # Backup file
 *~
+=======
+>>>>>>> 68e89035928655f4f95f3f0424ef1a96c4e20ea2
