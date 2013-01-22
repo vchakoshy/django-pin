@@ -1,8 +1,9 @@
 # coding: utf-8
 from django.contrib.syndication.views import Feed
-from pin.models import Post
 from django.core.urlresolvers import reverse
 from django.utils.feedgenerator import Rss201rev2Feed
+
+from pin.models import Post
 
 class CorrectMimeTypeFeed(Rss201rev2Feed):
     mime_type = 'application/xml'

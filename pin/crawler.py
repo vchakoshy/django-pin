@@ -1,14 +1,15 @@
+import httplib
+import lxml.html
 import socket
 import urllib2
-import lxml.html
 import urlparse
-import httplib
+
 from urllib2 import URLError, HTTPError
+
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
 socket.setdefaulttimeout(10)
-
 
 def get_url_content(url):
     try:

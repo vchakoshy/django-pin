@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from pin.models import Post, Notify
 
 class PinAdmin(admin.ModelAdmin):

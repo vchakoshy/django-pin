@@ -1,6 +1,7 @@
+import os
 import time
 from datetime import datetime
-import os
+
 from django.conf import settings
 
 def create_filename(filename):

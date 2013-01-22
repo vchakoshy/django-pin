@@ -1,13 +1,13 @@
 # -*- coding: utf8 -*- 
 
 from django.conf import settings
-from django.db import models
-from django.db.models.signals import post_save, post_delete
 from django.contrib.auth.models import User
 from django.contrib.comments.models import Comment
 from django.contrib.comments.signals import comment_was_posted
 from django.contrib.sites.models import Site
 from django.core.validators import URLValidator
+from django.db import models
+from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext_lazy as _
 
 from taggit.managers import TaggableManager

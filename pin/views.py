@@ -1,32 +1,30 @@
 # coding: utf-8
-""" import from system """
+
 import os
 import time
 import json
 import urllib
 from shutil import copyfile
-from pin.tools import create_filename
-from taggit.models import Tag
-from user_profile.models import Profile
 
-""" import from django """
-from django.shortcuts import render_to_response, get_object_or_404
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.comments.models import Comment
 from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.template.context import RequestContext
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, Http404, HttpResponse
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from django.contrib.comments.models import Comment
 
-""" import from application """
 import pin_image
+from pin.crawler import get_images
 from pin.forms import PinForm, PinUpdateForm
 from pin.models import Post, Follow, Stream, Likes, Notify
-from pin.crawler import get_images
+from pin.tools import create_filename
 
+from user_profile.models import Profile
+from taggit.models import Tag
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 

@@ -1,4 +1,3 @@
-import PIL
 from PIL import Image
 
 def resize(image, image_out, basewidth=192):

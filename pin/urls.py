@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
-
 from django.contrib import admin
+
 from pin.feeds import LatestPinFeed
 from pin.api import PostResource
 
