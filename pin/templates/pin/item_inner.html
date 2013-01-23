@@ -25,7 +25,7 @@
 	</div>
 	<div class="feed-inner">
 		{% thumbnail item_inner.image "603" upscale=False as im %}
-		<div class="img-block" style="height: {{im.height}}px; width: {{im.width}}px; margin: 0 auto">
+		<div style="height: {{im.height}}px; width: {{im.width}}px; margin: 0 auto">
 			<a href="{{MEDIA_URL}}{{item_inner.image}}" >
 			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item_inner.text|remove_newlines|truncatewords:15}}">
 			</a>

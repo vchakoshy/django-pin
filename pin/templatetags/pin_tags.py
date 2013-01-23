@@ -1,5 +1,5 @@
-from calverter import Calverter
 import datetime
+from calverter import Calverter
 from urlparse import urlparse
 
 from django import template
