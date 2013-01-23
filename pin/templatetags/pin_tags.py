@@ -31,7 +31,7 @@ class UserCats(template.Node):
                 context['user_category'] = subs
                 #return 1
             else:
-                context['user_category'] = 0
+                context['user_category'] = []
                 #return 0
         except template.VariableDoesNotExist:
             return ''
