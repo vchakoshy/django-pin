@@ -13,6 +13,10 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
+class Category(models.Model):
+    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, related_name='cat_model')
+
 class Post(models.Model):
     #title = models.CharField(max_length=250, blank=True)
     text = models.TextField(blank=True, verbose_name=_('Text'))
@@ -23,6 +27,7 @@ class Post(models.Model):
     user = models.ForeignKey(User)
     like = models.IntegerField(default=0)
     url = models.CharField(blank=True, max_length=2000, validators=[URLValidator()])
+    category = models.ForeignKey(Category)
     
     tags = TaggableManager(blank=True)
     

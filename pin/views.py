@@ -20,11 +20,12 @@ from django.views.decorators.csrf import csrf_exempt
 import pin_image
 from pin.crawler import get_images
 from pin.forms import PinForm, PinUpdateForm
-from pin.models import Post, Follow, Stream, Likes, Notify
+from pin.models import Post, Follow, Stream, Likes, Notify, Category
 from pin.tools import create_filename
 
 from user_profile.models import Profile
 from taggit.models import Tag
+import sys
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 
@@ -186,6 +187,16 @@ def sendurl(request):
         if form.is_valid():
             model = form.save(commit=False)
             
+            category = post_values['category']
+                
+            if category.startswith('newcat-'):
+                category = category.replace('newcat-', '')
+                category, created = Category.objects.get_or_create(user=request.user,name=category)
+            else:
+                category = Category.objects.filter(user=request.user, id=category).all()
+                
+            model.category_id = category.id
+            
             image_url= model.image
             
             filename = image_url.split('/')[-1]
@@ -241,6 +252,16 @@ def send(request):
         if form.is_valid():
             model = form.save(commit=False)
             
+            category = post_values['category']
+                
+            if category.startswith('newcat-'):
+                category = category.replace('newcat-', '')
+                category, created = Category.objects.get_or_create(user=request.user,name=category)
+            else:
+                category = Category.objects.filter(user=request.user, id=category).all()
+                
+            model.category_id = category.id
+            
             filename= model.image
             
             image_o = "%s/pin/temp/o/%s" % ( MEDIA_ROOT,filename)
@@ -259,11 +280,19 @@ def send(request):
             return HttpResponseRedirect('/pin/')
     else:
         form = PinForm()
+    
+    user_category = Category.objects.filter(user_id=request.user.id).all()
         
     if request.is_ajax():
-        return render_to_response('pin/_send.html',{'form': form}, context_instance=RequestContext(request))
+        return render_to_response('pin/_send.html',
+                                  {'form': form,
+                                   'user_category': user_category}, 
+                                  context_instance=RequestContext(request))
     else:
-        return render_to_response('pin/send.html',{'form': form}, context_instance=RequestContext(request))
+        return render_to_response('pin/send.html',
+                                  {'form': form,
+                                   'user_category': user_category}, 
+                                  context_instance=RequestContext(request))
 
 @login_required
 def edit(request, post_id):
@@ -279,6 +308,16 @@ def edit(request, post_id):
             form = PinUpdateForm(post_values, instance=post)
             if form.is_valid():
                 model = form.save(commit=False)
+                category = post_values['category']
+                
+                if category.startswith('newcat-'):
+                    category = category.replace('newcat-', '')
+                    category, created = Category.objects.get_or_create(user=request.user,name=category)
+                else:
+                    category = Category.objects.filter(user=request.user, id=category).all()
+                    
+                model.category_id = category.id
+                
                 model.save()
                 
                 form.save_m2m()
