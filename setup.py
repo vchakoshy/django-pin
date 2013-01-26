@@ -3,7 +3,7 @@ from setuptools import find_packages
 from distutils.core import setup
 
 
-version = '1.2.3'
+version = '1.3.0'
 
 setup(
     name = "django-pin",

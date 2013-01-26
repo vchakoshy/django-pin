@@ -1,5 +1,5 @@
-
-<form class="form-horizontal" action="{% url pin-sendurl%}" method="post">
+{% load pin_tags %}
+<form class="form-horizontal" action="{% url pin-sendurl%}" method="post" id="pin-form-from-url">
 {%csrf_token%}
 {{ form.errors}}
 	<div class="control-group">
@@ -32,42 +32,6 @@
 		<span class="help-inline"> </span>
 		</div>
     </div>
-    
-    <div class="control-group">
-		<label class="control-label">دسته بندی:</label>
-		<div class="controls">
-			<div id="cat-select-div">
-				<select name="category" id="cat-select">
-					<option value="0">بدون دسته</option>
-					{% for cat in usercats %}
-					<option value="{{cat.id}}">{{cat.name}}</option>
-					{% endfor %}
-				</select>
-				<button id="cat-add-btn" class="btn"><i class="icon-plus"></i></button>
-			</div>
-			<div id="cat-new-div" style="display:none;">
-				<input type="text" placeholder="ورزشی" id="cat-new-input" />
-				<button class="btn" id="cat-new-btn"><i class="icon-ok"></i></button>
-			</div>
-			
-		</div>
-	</div>
-	
-<script type="text/javascript">
-$('#cat-add-btn').click(function(){
-	$("#cat-select-div").hide();
-	$("#cat-new-div").show();
-	return false;
-});
-
-$("#cat-new-btn").click(function(){
-	var catName = $("#cat-new-input").val();
-	$("#cat-select").append('<option selected="selected" value="newcat-' + catName + '">' + catName + '</option>');
-	$("#cat-select-div").show();
-	$("#cat-new-div").hide();
-	return false;
-});
-</script>
     
     <div class="control-group">
 		<label class="control-label">برچسب ها: </label>

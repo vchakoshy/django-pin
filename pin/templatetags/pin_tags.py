@@ -10,36 +10,10 @@ from django.template.defaultfilters import stringfilter
 from django.utils.text import normalize_newlines
 from django.utils.safestring import mark_safe
 
-from pin.models import Likes as pin_likes, Notify, Category
+from pin.models import Likes as pin_likes, Notify
 from user_profile.models import Profile
 
 register = Library()
-
-def user_cats(parser, token):
-   
-    return UserCats()
-
-class UserCats(template.Node):
-    def __init__(self):
-        pass
-    
-    def render(self, context):
-        try:
-            user = context['user']
-            subs = Category.objects.filter(user=user).all()
-            if subs:
-                context['user_category'] = subs
-                #return 1
-            else:
-                context['user_category'] = []
-                #return 0
-        except template.VariableDoesNotExist:
-            return ''
-        
-        return ''
-    
-register.tag('user_cats', user_cats)
-
 
 def user_item_like(parser, token):
     try:
