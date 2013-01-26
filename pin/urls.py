@@ -26,6 +26,7 @@ urlpatterns = patterns('pin.views',
     url(r'^tag/(.*)/', 'tag', name="pin-tag"),
     url(r'^show_notify/', 'show_notify', name="show_notify"),
     url(r'^latest/feed/', LatestPinFeed(), name="pin-latest-feed"),
+    url(r'^popular/', 'popular', name="pin-popular"),
     #url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemaps}),
     
     #not stables

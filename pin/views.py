@@ -26,6 +26,7 @@ from pin.tools import create_filename
 from user_profile.models import Profile
 from taggit.models import Tag
 import sys
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 
@@ -54,10 +55,39 @@ def home(request):
         return render_to_response('pin/home.html', 
                               {'latest_items': latest_items},
                               context_instance=RequestContext(request))
+
+def popular(request):
+    ROW_PER_PAGE = 20
     
-    #return render_to_response('pin/home.html',context_instance=RequestContext(request))
-
-
+    post_list = Post.objects.all().order_by('-like')
+    paginator = Paginator(post_list, ROW_PER_PAGE)
+    
+    
+    try:
+        offset = int(request.GET.get('older', 1))
+    except ValueError:
+        offset = 1
+    
+    try:
+        latest_items = paginator.page(offset)
+    except PageNotAnInteger:
+        latest_items = paginator.page(1)
+    except EmptyPage:
+        return HttpResponse(0)
+    
+    
+    form = PinForm()
+    
+    if request.is_ajax():
+        return render_to_response('pin/_items.html', 
+                              {'latest_items': latest_items,'pin_form':form,'offset':latest_items.next_page_number},
+                              context_instance=RequestContext(request))
+        
+    else:
+        return render_to_response('pin/home.html', 
+                              {'latest_items': latest_items, 'offset':latest_items.next_page_number},
+                              context_instance=RequestContext(request))
+    
 
 def user(request, user_id):
     user = get_object_or_404(User, pk=user_id)
