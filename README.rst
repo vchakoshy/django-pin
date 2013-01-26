@@ -40,3 +40,4 @@ In your urls.py:
 Live demo
 ---------
 http://www.wisgoon.com/pin/
+http://www.shiastock.com/
