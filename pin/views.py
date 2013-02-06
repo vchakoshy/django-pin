@@ -24,9 +24,10 @@ from pin.models import Post, Follow, Stream, Likes, Notify
 from pin.tools import create_filename
 
 from user_profile.models import Profile
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 import sys
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.contrib.contenttypes.models import ContentType
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 
@@ -472,21 +473,44 @@ def delneveshte(request):
     return render_to_response('pin/delneveshte2.html',context_instance=RequestContext(request))
 
 def tag(request, keyword):
+    ROW_PER_PAGE = 20
+    
     tag = get_object_or_404(Tag, slug=keyword)
-    latest_items = Post.objects.filter(tags__id=tag.id)
+    content_type = ContentType.objects.get_for_model(Post)
+    tag_items = TaggedItem.objects.filter(tag_id=tag.id, content_type=content_type)
+    
+    paginator = Paginator(tag_items, ROW_PER_PAGE)
+    
+    try:
+        offset = int(request.GET.get('older', 1))
+    except ValueError:
+        offset = 1
+    
+    try:
+        tag_items = paginator.page(offset)
+    except PageNotAnInteger:
+        tag_items = paginator.page(1)
+    except EmptyPage:
+        return HttpResponse(0)
+    
+    s = []
+    for t in tag_items:
+        s.append(t.object_id)
+        
+    latest_items = Post.objects.filter(id__in=s).all()
     
     form = PinForm()
     
     if request.is_ajax():
         if latest_items.exists():
             return render_to_response('pin/_items.html', 
-                              {'latest_items': latest_items,'pin_form':form},
+                              {'latest_items': latest_items,'pin_form':form, 'offset':tag_items.next_page_number},
                               context_instance=RequestContext(request))
         else:
             return HttpResponse(0)
     else:
         return render_to_response('pin/tag.html', 
-                              {'latest_items': latest_items, 'tag': tag},
+                              {'latest_items': latest_items, 'tag': tag,'offset':tag_items.next_page_number},
                               context_instance=RequestContext(request))
     
     #return render_to_response('pin/home.html',context_instance=RequestContext(request))
