@@ -1,0 +1,3 @@
+django-taggit
+django-daddy-avatar
+sorl-thumbnail

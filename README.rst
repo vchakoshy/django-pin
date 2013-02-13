@@ -23,6 +23,11 @@ Then add ``pin`` to your ``INSTALLED_APPS``:
     INSTALLED_APPS = (
         ...
         'pin',
+        'django.contrib.humanize',
+        'taggit',
+        'django.contrib.comments',
+        'sorl.thumbnail',
+        'daddy_avatar',
         ...
     )
 
