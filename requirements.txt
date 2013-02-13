@@ -1,3 +1,4 @@
 django-taggit
 django-daddy-avatar
+django-user-profile
 sorl-thumbnail
