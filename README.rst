@@ -21,11 +21,11 @@ Then add ``pin`` to your ``INSTALLED_APPS``:
     INSTALLED_APPS = (
         ...
         'pin',
-        'django.contrib.humanize',
-        'taggit',
         'django.contrib.comments',
-        'sorl.thumbnail',
+        'django.contrib.humanize',
         'daddy_avatar',
+        'sorl.thumbnail',
+        'taggit',        
         ...
     )
 
@@ -42,6 +42,7 @@ In your urls.py:
 
 Live demo
 ---------
-http://www.wisgoon.com/pin/
 
-http://www.shiastock.com/
+    http://www.wisgoon.com/pin/
+
+    http://www.shiastock.com/
