@@ -19,7 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import pin_image
 from pin.crawler import get_images
-from pin.forms import PinForm, PinUpdateForm
+from pin.forms import PinForm, PinUpdateForm, PinDirectForm
 from pin.models import Post, Follow, Stream, Likes, Notify
 from pin.tools import create_filename
 
@@ -28,6 +28,8 @@ from taggit.models import Tag, TaggedItem
 import sys
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.contenttypes.models import ContentType
+
+from tastypie.models import ApiKey
 
 MEDIA_ROOT = settings.MEDIA_ROOT
 
@@ -246,6 +248,48 @@ def sendurl(request):
             
     return render_to_response('pin/sendurl.html',{'form':form}, 
                               context_instance=RequestContext(request)) 
+
+@csrf_exempt
+def d_send(request):
+    token = request.GET.get('token','')
+    
+    if not token:
+        return HttpResponse('error in user validate')
+    
+    try:
+        api = ApiKey.objects.get(key=token)
+        user = api.user
+    except ApiKey.DoesNotExist:
+        return HttpResponse('error in user validate')
+    
+    if request.method == 'POST' and user.is_active:
+        form = PinDirectForm(request.POST, request.FILES)
+        if form.is_valid():
+            upload = request.FILES.values( )[ 0 ]
+            filename = create_filename(upload.name)
+            
+            try:
+                from io import FileIO, BufferedWriter
+                with BufferedWriter( FileIO( "%s/pin/images/o/%s" % (MEDIA_ROOT, filename), "wb" ) ) as dest:
+                    for c in upload.chunks( ):
+                        dest.write( c )
+                        
+                    ## after upload we need to save model
+                    model = Post()
+                    model.image = "pin/images/o/%s" % (filename)
+                    model.user = api.user
+                    model.timestamp = time.time()
+                    model.text = form.cleaned_data['description']
+                    model.save()
+                    
+                    return HttpResponse('success')
+            except IOError:
+                # could not open the file most likely
+                return HttpResponse('error')
+            
+    else:
+        form = PinDirectForm()
+
 @login_required
 @csrf_exempt
 def a_sendurl(request):
