@@ -10,7 +10,7 @@ class PinForm(ModelForm):
         
 class PinDirectForm(forms.Form):
     image = forms.ImageField()
-    description = forms.CharField()
+    description = forms.CharField(required=False)
     
 class PinUpdateForm(ModelForm):
     class Meta:

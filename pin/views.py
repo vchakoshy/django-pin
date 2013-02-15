@@ -287,9 +287,6 @@ def d_send(request):
                 # could not open the file most likely
                 return HttpResponse('error')
             
-    else:
-        form = PinDirectForm()
-
 @login_required
 @csrf_exempt
 def a_sendurl(request):
