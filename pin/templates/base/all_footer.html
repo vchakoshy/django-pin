@@ -1,0 +1,33 @@
+
+<button id="ScrollToTop" class="Button WhiteButton Indicator" type="button">
+    <i class="icon-arrow-up"></i>
+</button>
+{% load compress %}
+{% compress js inline%}
+<script type="text/javascript">
+$('.tooltips').tooltip();
+$("#ScrollToTop").click(function(){
+	$('html, body').animate({scrollTop: $("#wrapper").offset().top}, 1000);
+});
+
+$('.pin-item-link').live('click',function(){
+	return true;
+	var item_link = $(this);
+	href=item_link.attr('href');
+	$('#pinitem').html('<center><img src="{{MEDIA_URL}}img/loader.gif" /></center>').modal();
+	$('#pinitem').load(href,function(){
+    	$(this).modal({
+                keyboard:true,
+                
+        }).css({
+        width: 'auto',
+        	'margin-left': function () {
+            return -($(this).width() / 2);
+        	}
+    	});
+   	});
+
+	return false;
+});
+</script>
+{%endcompress%}

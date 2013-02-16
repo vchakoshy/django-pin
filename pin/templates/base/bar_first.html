@@ -1,0 +1,46 @@
+{%spaceless%}
+{% load flatpages %}
+{% load daddy_avatar %}
+{% get_flatpages as flatpages %}
+<ul class="nav nav-tabs nav-first">
+
+	<li>
+		<img src="{{MEDIA_URL}}img/wisgoon_logo.png" height="38px" style="height: 38px" alt="wisgoon what is going on" />
+	</li>
+
+	<li class="pull-right">
+		<a href="{% url home %}">صفحه اصلی</a>
+	</li>
+	<li class="nav-right {{pinactive}}">
+		<a href="{% url pin-home %}">پین</a></li>
+	<li class="pull-right {{rssactive}}">
+		<a href="{% url rss %}">فید خوان</a>
+	</li>
+	<li class="pull-right">
+		<a href="{% url rss-search %}">جستجو</a>
+	</li>
+	<li class="pull-right">
+		<a href="{% url contactus-home %}">ارتباط با ما</a>
+	</li>
+	
+	{% for page in flatpages %}
+        <li class="pull-right"><a href="{{ page.url }}">{{ page.title }}</a></li>
+    {% endfor %}
+	{% if user.is_authenticated %}
+	<li class="pull-right">
+		<a class="tooltips" data-placement="bottom" rel="tooltip" title="نمایش و ویرایش پروفایل" href="{% url pin-user user.id%}"><img src="{{user.email|daddy_avatar:20}}"></a>
+	</li>
+	<li class="pull-right">
+		<a class="tooltips" data-placement="bottom" data-dismiss="alert" href="/accounts/logout/" rel="tooltip" title="خروج از سایت" onclick="return confirm('Are you sure you want to log out?');">
+		<i class="icon-off icon-black"></i></a>
+	</li>
+	{%else%}
+	<li class="pull-right">
+		<a href="{% url registration_register %}"><i class="icon-user icon-black"></i> عضویت</a>
+	</li>
+	<li class="pull-right">
+		<a href="/accounts/login/"><i class="icon-user icon-black"></i> ورود</a>
+	</li>
+	{%endif%}
+</ul>
+{%endspaceless%}
