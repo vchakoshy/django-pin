@@ -1,0 +1,199 @@
+{% load rss_tags %}
+{% load compress %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+<head>
+	<title>ویسگون {% block title%}{% endblock%}</title>
+	<meta name="keywords" content="social,rss,reader" />
+	<meta name="description" content="{%block description%}what is going on, social rss reader{%endblock%}" />
+<link rel="alternate" type="application/rss+xml" href="{% url pin-latest-feed%}" />
+{% block opengraph%}{% endblock opengraph%}
+
+{% include "base/all_header.html"%}
+
+{% compress css %}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/main.css?ver=1.1.1">
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/important.css?v=0.0.1">
+{%endcompress%}
+
+{% compress js%}
+<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/bootstrap.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/textextc.js"></script>
+<script src="{{MEDIA_URL}}js/fileuploader.js" type="text/javascript"></script>
+{% block extra_js %}{% endblock extra_js %}
+{% block extra_css%}{% endblock extra_css%}
+{% endcompress %}
+
+<style type="text/css">
+/* thanks to http://afsaran.ir/ */
+@font-face
+{
+	font-family: afsFont;
+	src: local('Koodak Bold'),
+	url('{{MEDIA_URL}}/fonts/BKoodakBold.woff') format('woff'),
+	url('{{MEDIA_URL}}/fonts/BKoodakBold.ttf') format('truetype'),
+	url('{{MEDIA_URL}}/fonts/BKoodakBold.eot');
+}
+</style>
+{% include "base/analytics.html"%}
+</head>
+
+	<body dir="rtl">
+		
+		<div class="container row-fluid" id="wrapper">
+			<div class="navbar-fixed-top">
+			{% include "base/bar_first.html" with pinactive="active" %}
+			
+			<ul class="nav nav-tabs nav-second">
+				<li>
+					<form class="navbar-search pull-left" action="{% url rss-search%}" method="get">
+						<input type="text" name="q" class="search-query" placeholder="جستجو">
+					</form>
+				</li>
+				<li class="nav-right">
+					<a href="{% url pin-home %}">آخرین مطالب</a></li>
+			  <li class="nav-right">
+			  {% if user.is_authenticated%}
+			  	<a data-toggle="modal" data-target="#myModal" href="#myModal"><i class="icon-plus-sign"></i> ارسال مطلب جدید </a>
+			  {%else%}
+			  	<a href="/accounts/login/?next=/pin"><i class="icon-plus-sign"></i> ارسال مطلب جدید</a>
+			  {%endif%}
+			  </li>
+			  <li class="nav-right">
+			  {% if user.is_authenticated%}
+			  	<a data-toggle="modal" data-target="#pin-from-url" href="#pin-from-url"><i class=" icon-globe"></i> ارسال از وب</a>
+			  {%else%}
+			  	<a href="/accounts/login/?next=/pin"><i class=" icon-globe"></i> ارسال از وب</a>
+			  {%endif%}
+			  </li>
+
+<li class="nav-right">
+	<a href="{% url pin-popular%}"><i class="icon-fire"></i> برترینها</a>
+</li>
+			  
+{% if user.is_authenticated%}
+<li class="nav-right">
+	<a href="{% url pin-following%}">دنبال شوندگان</a>
+</li>
+<li class="nav-right">
+	<a href="#notify" data-load="{% url show_notify%}" title="اعلانات" class="popnotify"><i class="icon-bell"> </i> {{user.id|get_user_notify}} </a>
+</li>
+{%endif%}
+			  
+			  {%block pin-ex-nav%}{%endblock pin-ex-nav%}
+
+			  
+			</ul>
+			</div>
+			<div id="content" class="container row-fluid" style="padding-top:80px">
+				{% block content %}
+				{% endblock content %}
+			</div>
+			<div class="loading">
+				<img src="{{MEDIA_URL}}img/loader.gif" />
+			</div>
+		</div>
+
+{% if user.is_authenticated %}
+<div style="display: none;" class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 id="myModalLabel">ارسال مطلب جدید</h2>
+  </div>
+  <div class="modal-body">
+    {% include "pin/_send.html"%}
+  </div>
+</div>
+
+<div style="display: none;" class="modal" id="pin-from-url" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close btn-large" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 id="myModalLabel">ارسال از وب</h2>
+  </div>
+  <div class="modal-body">
+    {% include "pin/_sendurl.html"%}
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="profileModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 id="myModalLabel">ویرایش مشخصات</h2>
+  </div>
+  <div class="modal-body">
+  </div>
+</div>
+
+{%endif%}
+
+<div style="display: none;" class="modal modal-pin-item fade" id="pinitem" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close btn-large" data-dismiss="modal" aria-hidden="true">×</button>
+    <h2 id="myModalLabel">ویرایش پین</h2>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+</div>
+
+{% load compress %}
+{% compress js inline%}
+<script type="text/javascript">
+jQuery(function($) {
+    $('form[data-async]').live('submit', function(event) {
+        var $form = $(this);
+        var $target = $($form.attr('data-target'));
+
+        $.ajax({
+            type: $form.attr('method'),
+            url: $form.attr('action'),
+            data: $form.serialize(),
+
+            success: function(data, status) {
+                alert(data);
+                $('#pinitem').modal('hide').children('.modal-body').html('');
+                
+            }
+        });
+
+        event.preventDefault();
+    });
+});
+$('#pinitem').on('hide', function() {
+    $(this).removeData('modal');
+    $(this).children('.modal-body').html('');
+});
+
+// for notification popover
+var isVisible = false;
+var clickedAway = false;
+var notifCache=false;
+$(".popnotify").bind('click',function(){
+	var el=$(this);
+	if (isVisible){
+		$(el).popover('hide');
+	}else{
+		isVisible = true;
+		if(!notifCache){
+		    $.get(el.attr('data-load'),function(d){
+		    	notifCache=d;
+		    	el.unbind('click').popover({content: d, placement:'bottom',html:true}).popover('show');
+		    });
+		}else{
+		    el.unbind('click').popover({content: notifCache, placement:'bottom',html:true}).popover('show');   	
+	    }
+    }
+    
+});
+
+</script>
+{% endcompress %}
+{% include 'base/all_footer.html'%}
+
+	</body>
+</html>
