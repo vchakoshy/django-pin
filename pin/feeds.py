@@ -16,13 +16,18 @@ class LatestPinFeed(Feed):
     #creator = "http://www.wisgoon.com"
     
     def items(self):
-        return Post.objects.order_by('-id')[:30]
+        return Post.objects.order_by('-id')
     
     def item_title(self, item):
         return item.text[:80]
     
     def item_description(self, item):
-        return item.text
+        text = item.text
+        img = item.get_image_thumb()
+        if img:
+            text = "<p>%s</> <br><br> <img src='%s'>" % (text, img.url )
+        
+        return text
     
     def item_link(self, item):
         return reverse('pin-item', args=[item.pk])

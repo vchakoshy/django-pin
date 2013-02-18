@@ -10,6 +10,8 @@ from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext_lazy as _
 
+from sorl.thumbnail import get_thumbnail
+
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 
@@ -48,7 +50,14 @@ class Post(models.Model):
         else:
             url='http://%s%s%s' % (Site.objects.get_current().domain, settings.MEDIA_URL, self.image)
         return url
-    
+
+    def get_image_thumb(self):
+        try:
+            im = get_thumbnail(self.image, '192', crop='center', quality=99)
+        except:
+            im = None
+        return im
+
     @classmethod
     def change_tag_slug(cls, sender, instance, *args, **kwargs):
         if kwargs['created']:
