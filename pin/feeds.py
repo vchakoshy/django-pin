@@ -16,7 +16,7 @@ class LatestPinFeed(Feed):
     #creator = "http://www.wisgoon.com"
     
     def items(self):
-        return Post.objects.order_by('-id')
+        return Post.objects.order_by('-id')[:100]
     
     def item_title(self, item):
         return item.text[:80]
