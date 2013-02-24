@@ -13,15 +13,6 @@
 	</li>
 	<li class="nav-right {{pinactive}}">
 		<a href="{% url pin-home %}">پین</a></li>
-	<li class="pull-right {{rssactive}}">
-		<a href="{% url rss %}">فید خوان</a>
-	</li>
-	<li class="pull-right">
-		<a href="{% url rss-search %}">جستجو</a>
-	</li>
-	<li class="pull-right">
-		<a href="{% url contactus-home %}">ارتباط با ما</a>
-	</li>
 	
 	{% for page in flatpages %}
         <li class="pull-right"><a href="{{ page.url }}">{{ page.title }}</a></li>
@@ -35,9 +26,6 @@
 		<i class="icon-off icon-black"></i></a>
 	</li>
 	{%else%}
-	<li class="pull-right">
-		<a href="{% url registration_register %}"><i class="icon-user icon-black"></i> عضویت</a>
-	</li>
 	<li class="pull-right">
 		<a href="/accounts/login/"><i class="icon-user icon-black"></i> ورود</a>
 	</li>

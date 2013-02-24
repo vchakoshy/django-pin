@@ -1,4 +1,6 @@
 django-taggit
 django-daddy-avatar
 django-user-profile
+django-compressor
 sorl-thumbnail
+registration

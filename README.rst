@@ -23,9 +23,11 @@ Then add ``pin`` to your ``INSTALLED_APPS``:
         'pin',
         'django.contrib.comments',
         'django.contrib.humanize',
+        'django.contrib.flatpages',
         'daddy_avatar',
         'sorl.thumbnail',
-        'taggit',        
+        'taggit',
+        'compressor',
         ...
     )
 
