@@ -3,8 +3,8 @@
 {% load comments %}
 {% load thumbnail %}
 
-<!-- start feed item -->
-<div class="feed-item feed-inner-item" style="" >
+<!-- start pin item -->
+<div class="feed-item feed-inner-item" itemscope itemtype="http://schema.org/CreativeWork" >
 	<div class="pin-item-top">
 		<div style="float: left">
 			{% if item_inner.user_id != request.user.id %}
@@ -27,11 +27,11 @@
 		{% thumbnail item_inner.image "603" upscale=False as im %}
 		<div style="height: {{im.height}}px; width: {{im.width}}px; margin: 0 auto">
 			<a href="{{MEDIA_URL}}{{item_inner.image}}" >
-			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item_inner.text|remove_newlines|truncatewords:15}}">
+			<img itemprop="image" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item_inner.text|remove_newlines|truncatewords:15}}">
 			</a>
 		</div>
 		{% endthumbnail %}
-		<div class="feed-item-desc">
+		<div class="feed-item-desc" itemprop="name" >
 			{{item_inner.text|safe|linebreaksbr}}
 		</div>
 	</div>
@@ -136,4 +136,4 @@
 	</div>
 	</div>
 </div>
-<!-- end feed-item -->
+<!-- end pin-item -->
