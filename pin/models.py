@@ -65,6 +65,12 @@ class Post(models.Model):
             tag.slug = '-'.join(tag.name.split())#And clean title, and make sure this is unique.
             tag.save()
 
+    def admin_image(self):
+        img = self.get_image_thumb()
+        
+        return '<img src="%s" /> ' % img.url
+    admin_image.allow_tags = True
+
 class Follow(models.Model):
     follower = models.ForeignKey(User ,related_name='follower')
     following = models.ForeignKey(User, related_name='following')
