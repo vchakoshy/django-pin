@@ -149,6 +149,5 @@ def user_comment_post(sender, **kwargs):
                 
 post_save.connect(Stream.add_post, sender=Post)
 post_save.connect(Likes.user_like_post, sender=Likes)
-post_delete.connect(Likes.user_unlike_post, sender=Likes)
 post_save.connect(Post.change_tag_slug, sender=Tag)
 comment_was_posted.connect(user_comment_post, sender=Comment)
