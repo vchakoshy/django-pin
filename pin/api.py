@@ -30,7 +30,7 @@ class PostResource(ModelResource):
         resource_name = 'post'
         allowed_methods = ['get']
         paginator_class = Paginator
-        fields = ['id','image']
+        fields = ['id','image','likes','text']
     
     def dispatch(self, request_type, request, **kwargs):
         self.thumb_size = request.GET.get(self.thumb_query_name, self.thumb_default_size)        
