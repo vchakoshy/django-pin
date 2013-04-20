@@ -21,6 +21,7 @@ class PostResource(ModelResource):
     #user_id = fields.IntegerField(attribute = 'user_id')
     user_name = fields.CharField(attribute = 'user__username')
     user_avatar = fields.CharField(attribute = 'user__email')
+    likers = fields.ListField()
    # likers = fields.ToManyField(LikesResource,'likes', full=True)
    # likers = fields.ToManyField(LikesResource, attribute=lambda bundle: Likes.objects.filter(post=bundle.obj.pk))
     
@@ -29,12 +30,12 @@ class PostResource(ModelResource):
         resource_name = 'post'
         allowed_methods = ['get']
         paginator_class = Paginator
-        
-        
+        fields = ['id','image']
+    
     def dispatch(self, request_type, request, **kwargs):
         self.thumb_size = request.GET.get(self.thumb_query_name, self.thumb_default_size)        
         return super(PostResource, self).dispatch(request_type, request, **kwargs)
-
+    
     def dehydrate(self, bundle):
         id = bundle.data['id']
         o_image = bundle.data['image']
@@ -44,6 +45,12 @@ class PostResource(ModelResource):
         
         user_email = bundle.data['user_avatar']
         bundle.data['user_avatar'] = daddy_avatar.daddy_avatar(user_email)
+        
+        likers = Likes.objects.filter(post_id=id).all()
+        ar = []
+        for lk in likers:
+            ar.append([lk.user.id,lk.user.username, daddy_avatar.daddy_avatar(lk.user.email)])
 
+        bundle.data['likers'] = ar
 
         return bundle
