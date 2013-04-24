@@ -250,6 +250,40 @@ def sendurl(request):
                               context_instance=RequestContext(request)) 
 
 @csrf_exempt
+def d_like(request):
+    """
+        Devices like android application can send request to like ap post
+    """
+    token = request.GET.get('token','')
+
+    if not token:
+        return HttpResponse('error in user validation')
+    
+    try:
+        api = ApiKey.objects.get(key=token)
+        user = api.user
+    except ApiKey.DoesNotExist:
+        return HttpResponse('error in user validation')
+    if request.method == 'POST' and user.is_active:
+        try:
+            post_id = int(request.POST['post_id'])
+        except ValueError:
+            return HttpResponse('erro in post id')
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            return HttpResponse('post not found')
+
+        like, created = Likes.objects.get_or_create(user=user, post=post)
+        if created:
+            return HttpResponse('+1')
+        elif like:
+            like.delete()
+            return HttpResponse('-1')
+
+    return HttpResponse('error in parameters')
+
+@csrf_exempt
 def d_send(request):
     token = request.GET.get('token','')
     
