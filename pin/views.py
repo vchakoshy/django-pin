@@ -276,9 +276,13 @@ def d_like(request):
 
         like, created = Likes.objects.get_or_create(user=user, post=post)
         if created:
+            post.like=post.like+1
+            post.save()
             return HttpResponse('+1')
         elif like:
             like.delete()
+            post.like=post.like-1
+            post.save()
             return HttpResponse('-1')
 
     return HttpResponse('error in parameters')
