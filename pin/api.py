@@ -1,6 +1,10 @@
+import os
 from tastypie.resources import ModelResource
 from tastypie.paginator import Paginator
 from tastypie import fields
+
+from PIL import Image
+from django.conf import settings
 
 from sorl.thumbnail import get_thumbnail
 from pin.models import Post, Likes
@@ -27,7 +31,7 @@ class PostResource(ModelResource):
         resource_name = 'post'
         allowed_methods = ['get']
         paginator_class = Paginator
-        fields = ['id','image','like','text']
+        fields = ['id','image','like','text','url']
 
     def apply_filters(self, request, applicable_filters):
         base_object_list = super(PostResource, self).apply_filters(request, applicable_filters)
@@ -37,7 +41,6 @@ class PostResource(ModelResource):
         
         if user_id:
             filters.update(dict(user_id=user_id))
-
 
         return base_object_list.filter(**filters).distinct()
     
@@ -63,6 +66,14 @@ class PostResource(ModelResource):
 
         bundle.data['likers'] = ar
         
-        # Remove not used items
-        del(bundle.data['image'])
+        if self.get_resource_uri(bundle) == bundle.request.path:
+            # this is detail
+            del(bundle.data['thumbnail'])
+                   
+            img_path = os.path.join(settings.MEDIA_ROOT, o_image)
+            print img_path
+            im = Image.open(img_path)
+            w,h = im.size
+            bundle.data['hw'] = "%sx%s" % ( h,w )
+        
         return bundle
