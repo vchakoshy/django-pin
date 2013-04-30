@@ -68,7 +68,7 @@ class PostResource(ModelResource):
         
         if self.get_resource_uri(bundle) == bundle.request.path:
             # this is detail
-            del(bundle.data['thumbnail'])
+            #del(bundle.data['thumbnail'])
                    
             img_path = os.path.join(settings.MEDIA_ROOT, o_image)
             print img_path
