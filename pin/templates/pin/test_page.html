@@ -1,0 +1,19 @@
+{% load google_contacts %}
+
+<p>
+{% if google_state %}
+  Using imported contacts from Gmail [<a
+  href="{% google_auth_ url "request" %}">stop using</a>]
+{% else %}
+  Import contacts from <a
+  href="{% google_auth_ url "request" %}">Gmail</a>
+{% endif %}
+</p>
+
+{% if google_contacts %}
+<ul>
+  {% for contact in google_contacts %}
+  <li>{{ contact }}</li>
+  {% endfor %}
+</ul>
+{% endif %}

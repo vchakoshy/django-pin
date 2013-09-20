@@ -9,17 +9,17 @@
 	</li>
 
 	<li class="pull-right">
-		<a href="{% url home %}">صفحه اصلی</a>
+		<a href="{% url "home" %}">صفحه اصلی</a>
 	</li>
 	<li class="nav-right {{pinactive}}">
-		<a href="{% url pin-home %}">پین</a></li>
+		<a href="{% url "pin-home" %}">پین</a></li>
 	
 	{% for page in flatpages %}
-        <li class="pull-right"><a href="{{ page.url }}">{{ page.title }}</a></li>
+        <li class="pull-right"><a href="{{ page. url "}}"">{{ page.title }}</a></li>
     {% endfor %}
 	{% if user.is_authenticated %}
 	<li class="pull-right">
-		<a class="tooltips" data-placement="bottom" rel="tooltip" title="نمایش و ویرایش پروفایل" href="{% url pin-user user.id%}"><img src="{{user.email|daddy_avatar:20}}"></a>
+		<a class="tooltips" data-placement="bottom" rel="tooltip" title="نمایش و ویرایش پروفایل" href="{% url "pin-user" user.id%}"><img src="{{user.email|daddy_avatar:20}}"></a>
 	</li>
 	<li class="pull-right">
 		<a class="tooltips" data-placement="bottom" data-dismiss="alert" href="/accounts/logout/" rel="tooltip" title="خروج از سایت" onclick="return confirm('Are you sure you want to log out?');">

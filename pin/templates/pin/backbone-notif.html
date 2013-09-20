@@ -1,0 +1,46 @@
+{% extends "base/pin_new.html"%}
+{% load pin_tags %}
+
+{% block extra_js %}
+
+<script src="{{MEDIA_URL}}js/underscore-min.js"></script>
+<script src="{{MEDIA_URL}}js/backbone-min.js"></script>
+<script src="{{MEDIA_URL}}js/backbone-tastypie.js"></script>
+<script src="{{MEDIA_URL}}js/jquery.masonry.min.js"></script>
+{% endblock extra_js %}
+
+{% block content %}
+
+<script type="text/javascript">
+var start_loading=0;
+</script>
+
+<div class="row row-fluid">
+	<div class="span12">
+		<div id="feed-ul">
+			
+		</div>
+	</div>
+</div>
+
+<script type="text/template" id="feed-item-template">
+<div class="img-block" style="height: <%= hw[0] %>px; width:<%= hw[1] %>px">
+<a href="<%= permalink %>">
+	<img height="<%= hw[0] %>" width="<%= hw[1] %>" src="{{MEDIA_URL}}<%= thumbnail %>">
+</a>
+</div>
+<p><%= text %></p>
+
+<div style="height: 30px;padding: 3px">
+<img src="<%= user_avatar %>" style="display: inline; width:30px" > 
+<a href="">
+	<b style="font-size:11px;font-weight:normal;font-family:tahoma;;margin-right:5px;"><%= user_name %></b>
+</a>
+
+</div>
+
+</script>
+
+<script src="{{MEDIA_URL}}js/notif.js"></script>
+
+{% endblock content %}

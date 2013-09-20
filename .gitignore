@@ -36,3 +36,5 @@ nosetests.xml
 
 # Backup file
 *~
+
+/pin_back/

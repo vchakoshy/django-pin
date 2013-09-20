@@ -1,0 +1,45 @@
+{% load pin_tags%}
+{% load humanize %}
+{% load thumbnail %}
+{% load daddy_avatar%}
+
+{% spaceless %}
+{% for item in notif %}
+
+	<div class="notif-item" >
+		{% thumbnail item.post.image "100x100" crop="center" as im %}
+		<div class="notif-img" style="height: {{im.height}}px; width: {{im.width}}px">
+			<a class="pin-item-link" href="{% url "pin-item" item.post.id%}">
+			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item.text|remove_newlines|truncatewords:5}}">
+			</a>
+			
+		</div>
+		{% endthumbnail %}
+		<div class="notif-type">
+			{% if item.type == 1 %}
+		        <i class="icon-heart"></i>
+		    {% elif item.type == 2 %}
+	            <i class="icon-comment"></i>
+	        {% elif item.type == 3 %}
+	            <i class="icon-ok"></i>
+	        {% elif item.type == 4 %}
+	            <i class="icon-remove"></i>
+		    {% endif %}
+		</div>
+		<div class="notif-actors">
+			{% for actor in item.actors %}
+			<div style="float:right;padding:5px; heigth:40px;">
+            	<a target="_blank" href="{% url "pin-user" actor.actor_id %}"><img src="{{actor.actor_id|get_userdata_avatar:30}}"></a>
+        	</div>
+        	{% endfor%}
+    	</div>
+		{% if offset %}
+		<span data-next="{{offset}}" ></span>
+		{%else%}
+		<span data-next="{{item.date|date:"U"}}" ></span>
+		{%endif%}
+	
+	</div>
+	
+{%endfor%}
+{% endspaceless %}

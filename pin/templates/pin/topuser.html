@@ -1,0 +1,46 @@
+{% extends "base/pin.html"%}
+{% load pin_tags %}
+{% load daddy_avatar %}
+{%load cache %}
+
+{%block title%} کاربران برتر {%endblock title%}
+
+{% block content %}
+{% cache 500 topusers %}
+<div id="profile" class="row row-fluid">
+	<div id="feed-ul" class="container"style="width:940px;" >
+    <table style="width:100%" width="100%">
+        <tr>
+        {% for u in top_user %}
+        <td>
+        <div class="feed-item" style="padding:5px">
+            <a href="{% url "pin-user" u.user.id %}">
+                {% if forloop.counter < 9 %}
+                <img src="{{u.user|get_avatar:192}}" style="float:left; width:192px;" >
+                {%else%}
+                <img src="{{u.user|get_avatar:50}}" style="float:left" >
+                {%endif%}
+            </a>
+            <table>
+            <tr>
+            <td><a href="{% url "pin-user" u.user.id %}">{{u.user|get_username}}</a></td>
+            </tr><tr>
+            <td>تعداد مطالب: {{u.cnt_post}}</td>
+            </tr>
+            <tr>
+            <td>امتیاز: {{u.score}}</td>
+            </tr>
+            </table>
+        </div>
+        </td>
+        {% if forloop.counter|divisibleby:4 %}
+        </tr>
+        <tr>
+        {% endif %}
+        {%endfor%}
+        </tr>
+    </table>
+	</div>
+</div>
+{% endcache %}
+{% endblock content %}

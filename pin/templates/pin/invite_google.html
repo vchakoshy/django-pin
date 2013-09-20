@@ -1,0 +1,20 @@
+{% extends "pin/pure.html"%}
+
+{% block box-title %} دعوت از دوستان {% endblock%}
+
+{% block box-content %}
+{% if all_emails %}
+<div class="overflow">
+<table class="table">
+{% for email in all_emails %}
+	<tr>
+		<td><input type="checkbox" ></td>
+		<td>{{email}}</td>
+	</tr>
+{% endfor %}
+</table>
+</div>
+{% else %}
+<a href="{{login|safe}}">دعوت از دوستان گوگلی شما</a>
+{% endif %}
+{% endblock %}

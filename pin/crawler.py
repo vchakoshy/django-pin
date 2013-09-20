@@ -26,23 +26,22 @@ def get_url_content(url):
     return 0
 
 def check_content_type(url):
-    #try:
-        o=urlparse.urlparse(url)
-        
-        conn = httplib.HTTPConnection(o.netloc)
-        conn.request("HEAD", o.path)
-        res = conn.getresponse()
+
+    o=urlparse.urlparse(url)
     
-        content_type = res.getheader('content-type')
-        if content_type.startswith('image'):
-            return 'image'
-        else:
-            return 'text'
-    #except:
+    conn = httplib.HTTPConnection(o.netloc)
+    conn.request("HEAD", o.path)
+    res = conn.getresponse()
+    content_type = res.getheader('content-type')
+    if content_type and content_type.startswith('image'):
+        return 'image'
+    else:
         return 'text'
 
+    return 'text'
+
 def validate_url(url):
-    valid_url = URLValidator(verify_exists=False)
+    valid_url = URLValidator()
     
     try:
         valid_url(url)

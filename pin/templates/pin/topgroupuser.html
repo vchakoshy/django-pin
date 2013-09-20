@@ -1,0 +1,51 @@
+{% extends "base/pin.html"%}
+{% load pin_tags %}
+{% load daddy_avatar %}
+{%load cache %}
+
+{%block title%} کاربران برتر {%endblock title%}
+
+{% block content %}
+{% cache 500 topgroupusers %}
+<div id="profile" class="row row-fluid">
+	<div id="feed-ul" class="container"style="width:940px;" >
+        <div class="accordion" id="accordion2">
+            {% for cat in cats %}
+            <div class="accordion-group">
+                <div class="accordion-heading" style="background-color:#FFF ">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse{{cat.id}}">
+                        {{cat.title}}
+                    </a>
+                </div>
+                <div id="collapse{{cat.id}}" class="accordion-body collapse in">
+                  <div class="accordion-inner">
+                    <table style="width:100%" width="100%">
+                        <tr>
+                        {% for u in cat.tops %}
+                        <td>
+                        <div class="feed-item" style="padding:5px">
+                            <a href="{% url "pin-user" u.user.id %}">
+                                <img src="{{u.user|get_avatar:192}}" style="float:left; width:192px;" >
+                            </a>
+                            <table>
+                            <tr>
+                            <td><a href="{% url "pin-user" u.user.id %}">{{u.user|get_username}}</a></td>
+                            </tr>
+                            <tr>
+                            <td>امتیاز: {{u.sum_like}}</td>
+                            </tr>
+                            </table>
+                        </div>
+                        </td>
+                        {%endfor%}
+                        </tr>
+                    </table>
+                  </div>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+	</div>
+</div>
+{%endcache%}
+{% endblock content %}

@@ -1,7 +1,7 @@
 {% load pin_tags%}
 {% load humanize %}
 {% load thumbnail %}
-{% load daddy_avatar%}
+{% load daddy_avatar %}
 
 {% spaceless %}
 {% for item in latest_items %}
@@ -9,35 +9,83 @@
 	<div class="feed-item" >
 		{% thumbnail item.image "192" as im %}
 		<div class="img-block" style="height: {{im.height}}px; width: {{im.width}}px">
-			<a class="pin-item-link" href="{% url pin-item item.id%}">
+			<a class="pin-item-link" href="{% url "pin-item" item.id%}">
 			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{item.text|remove_newlines|truncatewords:5}}">
 			</a>
 		</div>
 		{% endthumbnail %}
 		<p>{{item.text|safe|truncatewords:"50"|linebreaksbr}} 
-		{% if item.url %}
+		{% if item.url %}"
 		<a target="_blank" rel="nofollow" href="{{item.url}}"><i class="icon-globe"></i></a>
 		{%endif%}</p>
-		
+		{% if user__id == item.user_id or is_super_user %}
+		<div class="actions" style="margin:5px 0">
+			<a href="{% url "pin-item-edit" item.id%}" style="margin-right: 5px"  data-toggle="modal" data-target="#pinitem"> 
+				<i class="icon-edit"></i> 
+			</a>
+			<a href="{% url "pin-item-delete" item.id%}" class=" delpost" style="margin-right: 5px"> 
+				<i class="icon-remove"></i> 
+			</a>
+		</div>
+		{% endif%}
+
+		{% if item.status != 1 %}
+		<div>
+			{% if item.status == 0 %}
+				<span>این مطلب نیاز به تایید دارد</span>
+			{% elif item.status == 2 %}
+				<span>این مطلب با قوانین سایت مغایر است و تنها به شما نمایش داده می شود</span>
+			{% endif %}
+		</div>
+		{% endif %}
+
+		{% with item.cnt_comments as cc %}
+		{% if cc %}
+		<div style="font-family:tahoma;font-size:11px;padding-right:5px">{{cc}} نظر
+		</div>
+		{% endif %}
+		{% endwith %}
+
+		{% if is_super_user %}
+		<div class="actions" style="margin:5px 0">
+			{% if item.show_in_default %}
+			<a href="{% url "pin-item-goto-index" item.id 0%}" title="remove from index" class="item-to-index" style="margin-right: 5px"> 
+				<i class="icon-remove-sign"></i> 
+			</a>
+			{% else %}
+			<a href="{% url "pin-item-goto-index" item.id 1%}" title="add to index" class="item-to-index" style="margin-right: 5px"> 
+				<i class="icon-ok-sign"></i> 
+			</a>
+			{% endif %}
+		</div>
+		{% endif %}
 		
 		<div style="height: 30px;padding: 3px">
-		<img src="{{item.user.email|daddy_avatar:30}}" style="display: inline;" > 
-		<a href="{% url pin-user item.user.id %}">
-			<b style="font-size:13px;font-weight:normal;margin-right:5px;">{{item.user|get_username}}</b>
+		<img src="{{item.user_id|get_userdata_avatar:30}}" style="display: inline;" > 
+		<a href="{% url "pin-user" item.user_id %}">
+			<b style="font-size:11px;font-weight:normal;font-family:tahoma;;margin-right:5px;">{{item.user_id|get_userdata_name}}</b>
 		</a>
+        {% if item.device == 2 %}
+        <i class="icon-camera" title="ارسال از موبایل" style="float:left;margin-left:5px"></i>
+        {%endif%}
 		</div>
 		<div class="feed-actions">
 		<div class="sharing-actions">
 			<div class="controls controls-row">
-				<a href="{% url pin-item-like item.id%}" class="btn btn_like {% if user.is_authenticated%}{% user_post_like item.id %}{% endif %}"> <i class="icon-heart"></i> {{item.like}} </a>
-				{% if user.id == item.user.id%}
-				<a href="{% url pin-item-delete item.id%}" class="btn btn-danger delpost" style="margin-right: 5px"> 
+				<a href="{% url "pin-item-like" item.id%}" class="btn btn_like {% if user.is_authenticated%}{% user_post_like item.id %}{% endif %}"> <i class="icon-heart"></i> {{item.cnt_likes}} </a>
+				{% if user.is_authenticated and user.id != item.user_id%}
+					<a href="{% url "report_pin" item.id%}" style="margin-right: 5px" class="btn btn_report "> <i class="icon-eye-open"></i></a>
+				{% endif %}
+				{%comment%}
+				{% if user.id == item.user.id or is_super_user %}
+				<a href="{% url "pin-item-delete" item.id%}" class="btn btn-danger delpost" style="margin-right: 5px"> 
 					<i class="icon-remove"></i> 
 				</a>
-<a href="{% url pin-item-edit item.id%}" class="btn" style="margin-right: 5px"  data-toggle="modal" data-target="#pinitem"> 
+<a href="{% url "pin-item-edit" item.id%}" class="btn" style="margin-right: 5px"  data-toggle="modal" data-target="#pinitem"> 
 	<i class="icon-pencil"></i> 
 </a>
 				{% endif %}
+				{%endcomment%}
 			</div>
 		</div>
 	</div>

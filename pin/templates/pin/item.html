@@ -1,27 +1,31 @@
 {% extends "base/pin.html"%}
-
+{% load daddy_avatar %}
 {% load pin_tags%}
+{% load thumbnail %}
 
-{% block title%} - {{item_inner.text|striptags|remove_newlines|truncatechars:66}}{% endblock title%}
-{%block description%}{{item_inner.text|striptags|remove_newlines|truncatewords:30}}{%endblock%}
+{% block title%} - عکس و تصویر {{post.text|striptags|remove_newlines|truncatechars:66}}{% endblock title%}
+{%block description%}{{post.text|striptags|remove_newlines|truncatewords:30}}{%endblock%}
 
 {% block opengraph%}
-<meta property="og:title" content="{{item_inner.text|striptags|remove_newlines|truncatechars:66}}" />
-<meta property="og:description" content="{{item_inner.text|striptags|remove_newlines|truncatewords:30}}" />
+<meta property="og:title" content="{{post.text|striptags|remove_newlines|truncatechars:66}}" />
+<meta property="og:description" content="{{post.text|striptags|remove_newlines|truncatewords:30}}" />
 <meta property="og:type" content="image/jpeg" />
-<meta property="og:url" content="{{ item_inner.get_host_url }}" />
-<meta property="og:image" content="{{ item_inner.get_image_absolute_url }}" />
+<meta property="og:url" content="{{ post.get_host_url}}" />
+<meta property="og:image" content="{{ post.get_image_absolute_url }}" />
 {% endblock opengraph%}
 
 {% block extra_js %}
 <script src="{{MEDIA_URL}}js/jquery.masonry.min.js"></script>
 {% endblock extra_js %}
 
+{% comment %}
+
 {% block pin-ex-nav %}
 <li class="nav-right active">
-	<a href="#"><h1 style="display: inline">{{item_inner.text|striptags|remove_newlines|truncatewords:15}}</h1></a>
+	<a href="#"><h1 style="display: inline">{{post.text|striptags|remove_newlines|truncatewords:15}}</h1></a>
 </li>
 {% endblock pin-ex-nav %}
+{% endcomment %}
 
 {% block content %}
 
@@ -29,14 +33,90 @@
 var start_loading=0
 </script>
 
-<div class="row row-fluid">
-	<div class="span12">
-	
-	<div id="feed-ul">
-		{% with display_item=1%}
-		{% include "pin/_items.html"%}
-		{% endwith%}
-	</div>
+<div class="container">
+    <div class="span3">
+        <div class="box">
+            <div class="box-title">مشخصات فرستنده</div>
+            <div class="box-content">
+                <a href="{% url "pin-user" post.user.id %}"><img src="{{post.user|get_avatar:188}}" /></a>
+                <br><br>
+                <div style="">
+                {% if post.user_id != request.user.id %}
+                    {% if follow_status == 0 %}
+                    <a class="btn btn-success" href="{% url "pin-follow" post.user.id 1 %}">ایجاد دوستی</a>
+                    {% else %}
+                    <a class="btn btn-danger" href="{% url "pin-follow" post.user.id 0 %}">قطع دوستی</a>
+                    {%endif%}
+                {% endif%}
+                </div>
+            </div>
+        </div>
+        {% if post.cnt_likes %}
+        <div class="box">
+            <div class="box-title">
+                علاقه مندان
+            </div>
+            <div class="box-content">
+                <div class="row-fluid">
+                    <div>
+        {% for like in post.likes %}
+            {% if request.user.is_superuser %}
+                {% ifchanged like.ip %} <br>{{like.ip}}<br> {% endifchanged %}
+                <a href="{% url "pin-user" like.user.id %}"><img alt="{{like.ip}}" src="{{like.user|get_avatar:50}}" style="display: inline;margin: 2px;" ></a>
+            {%else %}
+                        
+                <a href="{% url "pin-user" like.user.id %}"><img src="{{like.user|get_avatar:50}}" style="display: inline;margin: 2px;" ></a>
+                        
+            {%endif%}
+        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+        {% if post.next %}
+
+{% block nextpost%}<link rel="next" href="{{post.next.get_absolute_url}}">{%endblock%}
+
+        <div class="box">
+            <div class="box-title">
+                عکس بعدی
+            </div>
+            <div class="box-content">
+                <a href="{{post.next.get_absolute_url}}">
+                {% thumbnail post.next.image "192" as img %}
+                <img src="{{img.url}}" >
+                {% endthumbnail %}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if post.prev %}
+
+{% block prevpost%}<link rel="prev" href="{{post.prev.get_absolute_url}}">{%endblock%}
+
+        <div class="box">
+            <div class="box-title">
+                عکس قبلی
+            </div>
+            <div class="box-content">
+                <a href="{{post.prev.get_absolute_url }}">
+                {% thumbnail post.prev.image "192" crop="center" as img %}
+                <img src="{{img.url}}" >
+                {% endthumbnail %}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+	<div class="span9">
+	    <div id="feed-ul">
+            {% include "pin/item_inner.html" %}
+	    </div>
 	</div>
 	
 	
@@ -45,5 +125,15 @@ var start_loading=0
 var start_loading = 1;
 </script>
 {% include "pin/feed_scripts.html" %}
+
+{% block footer_script %}
+<!-- AddToAny BEGIN -->
+<script type="text/javascript">
+var a2a_config = a2a_config || {};
+a2a_config.locale = "fa";
+</script>
+<script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END -->
+{% endblock%}
 
 {% endblock content %}

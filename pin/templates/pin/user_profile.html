@@ -1,31 +1,102 @@
 {% load daddy_avatar%}
+{% load humanize %}
 {% load pin_tags %}
+<div class="advertise" style="width: 934px;margin: 10px auto;">
+    <script type="text/javascript" src="{{MEDIA_URL}}js/swfobject.js"></script>
+    <script type="text/javascript">
+    swfobject.embedSWF("{{MEDIA_URL}}ads/iranneeds.swf", "adsContent", "934", "118", "9.0.0");
+    </script>
+    <div id="adsContent">
+        <p>Alternative content</p>
+    </div> 
+</div>
 <div class="ProfileHeader">
 <div class="FixedContainer row clearfix" style="">
 	<div class="ProfileInfo ProfilePanel ">
-    <a href="" class="ProfileImage">
-    	<img src="{{latest_items.0.user.email|daddy_avatar:165}}" alt="">
-	</a>
+    <a href="" class="ProfileImage"><img src="{{cur_user|get_avatar:165}}" alt=""></a>
     <div class="content">
-        <span class="profile-name">{{profile.name}}</span>
-        <p class="colormuted">{{profile.bio}}</p>
+        <span class="profile-name">{{cur_user|get_username}}</span>
+        <ul id="user_information_details">
+            <li class="user_acc">
+                <label for="User_acceptability"> امتیاز</label> : {{cur_user.profile.score|intcomma}}
+            </li>
+            <li class="user_acc">
+                <label for="User_acceptability"> تعداد مطالب</label> : {{cur_user.profile.cnt_post}}
+            </li>
+            <li class="user_acc">
+                <label for="User_acceptability"> تعداد لایک</label> : {{cur_user.profile.cnt_like}}
+            </li>
+            <li class="user_acc">
+                <label for="User_acceptability"> تعداد خطا</label> : {{cur_user.profile.fault}}
+            </li>
+            <li class="user_acc">
+                <label for="User_acceptability"> ارسال مطلب</label> : 
+                {% if cur_user.profile.post_accept and cur_user.profile.post_accept_admin  %}
+                <b class="tooltips" data-placement="bottom" rel="tooltip" title="مطالب ارسالی نیاز به تایید ندارند">
+                    <i class="icon-ok"></i>
+                </b>
+                {% if user.is_superuser %}
+                    <a href="{% url "post-accept" cur_user.id 0 %}">غیر فعال</a>
+                {% endif %}
+                {% else%}
+                <b class="tooltips" data-placement="bottom" rel="tooltip" title="مطالب ارسال شده بعد تایید مدیران سایت نمایش داده می شوند.">
+                    <i class="icon-ban-circle"></i>
+                </b>
+                {% if user.is_superuser %}
+                    <a href="{% url "post-accept" cur_user.id 1 %}">تایید شود</a>
+                {% endif %}
+                {%endif%}
+            </li>
+            <li class="user_acc">
+                <label for="User_acceptability"> وضعیت</label> : 
+                {% if cur_user.is_active %}
+                فعال
+                {% if user.is_superuser %}
+                    <a href="{% url "activate-user" cur_user.id 0%}">غیر فعال کردن</a>
+                {% endif %}
+                {% else%}
+                غیرفعال
+                {% if user.is_superuser %}
+                    <a href="{% url "activate-user" cur_user.id 1%}">فعال کردن</a>
+                {% endif %}
+                {%endif%}
+            </li>
+            <li class="user_acc ">
+                <label> عضویت</label> : {{cur_user.date_joined|date:"d-m-Y"}}
+            </li>
+        </ul>
+
+        <p class="colormuted">{{cur_user.profile.bio}}</p>
         
-        {% if profile.website != '' %}
-        <a href="{{profile.website}}">{{profile.website}}</a>
+        {% if cur_user.profile.website != '' %}
+        <a href="{{cur_user.profile.website}}">{{cur_user.profile.website}}</a>
         {% endif %}
         <div class="profile-actions">
         	{% if cur_user.id != request.user.id %}
 				{% include "pin/following_box.html"%}
 			{% else %}
-			<a href="{% url user-profile-change%}" role="button" class="btn" data-toggle="modal" data-target="#profileModal">ویرایش مشخصات</a>
-
+    <a href="{% url "user-profile-change" %}" role="button" class="btn" data-toggle="modal" data-target="#profileModal">ویرایش مشخصات</a>
+    
+    <a href="/accounts/password/change/?{{user.has_usable_password}}">تعویض رمز عبور</a>
 
 			{% endif%}
         </div>
     </div>
-</div>
-	
-</div>
 
 </div>
-
+<div id="user_boxes">
+    <ul id="user_boxes_list">
+        <li>
+            <a href="{% url "pin-user-like" cur_user.id %}">
+                مطالب مورد علاقه
+            </a>
+        </li>
+        <li>
+            <a href="{% url "pin-user-friends" cur_user.id %}">
+                دوستان
+            </a>
+        </li>
+    </ul>
+</div>
+</div>
+</div>

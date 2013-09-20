@@ -1,0 +1,18 @@
+{% extends "base/pin.html"%}
+
+{%block title%} -  {%endblock title%}
+{% block content %}
+<div class="container">
+	<div class="span12">
+        <div class="box">
+			<div class="box-title">
+				{% block box-title %} {%endblock %}
+			</div>
+
+			<div class="box-content">
+				{% block box-content %} {%endblock%}
+			</div>
+        </div>
+	</div>
+</div>
+{% endblock content %}

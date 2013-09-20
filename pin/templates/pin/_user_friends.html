@@ -1,0 +1,43 @@
+{% load pin_tags %}
+{% load daddy_avatar %}
+
+<div id="profile" class="row row-fluid">
+	<div id="feed-ul" class="container"style="width:940px;" >
+	{% if user_items %}
+    <table style="width:100%" width="100%">
+        <tr>
+        {% for u in user_items %}
+        <td>
+        <div class="feed-item" style="padding:5px; width:165px">
+            <a href="{% url "pin-user" u.id %}">
+                
+                <img src="{{u.id|get_avatar:165}}" style="float:left; width:165px;height:165px" >
+                
+            </a>
+            <table>
+            <tr>
+            <td><a href="{% url "pin-user" u.id %}">{{u|get_username}}</a></td>
+            </tr><tr>
+            <td>تعداد مطالب: {{u.profile.cnt_post}}</td>
+            </tr>
+            <tr>
+            <td>امتیاز: {{u.profile.score}}</td>
+            </tr>
+            </table>
+        </div>
+        </td>
+        {% if forloop.counter|divisibleby:4 %}
+        </tr>
+        <tr>
+        {% endif %}
+        <span data-next="{{offset}}"></span>
+        {%endfor%}
+        </tr>
+    </table>
+    {% else %}
+    <div>
+دوستی ندارد
+    </div>
+    {% endif %}
+	</div>
+</div>

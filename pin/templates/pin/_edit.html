@@ -1,7 +1,7 @@
 {% load thumbnail %}
 {% load pin_tags %}
 
-<form method="post" action="{% url pin-item-edit post.id%}" data-async class="form-horizontal" action="" id="pin_form-edit" >
+<form method="post" action="{% url "pin-item-edit" post.id%}" data-async class="form-horizontal" action="" id="pin_form-edit" >
 {% csrf_token%}
 	
       	{{ form.errors}}
@@ -9,11 +9,13 @@
 		
 		{% thumbnail post.image "110" upscale=False as im %}
 		<div class="img-block" style="float:left;">
-			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+			<img src="{{im.url}}" width="{{ im.width }}" height="{{ im.height }}">
 		</div>
 		{% endthumbnail %}
 		<input type="hidden" value="{{post.image}}" id="image_field" name="image" />
 			<textarea id="id_text" rows="5" cols="40" name="text">{{form.text.value}}</textarea><br><br>
+
+            {{form.category}}<br><br>
 		
 			<input type="text" name="url" value="{{form.url.value}}" placeholder="URL" class="span3 ltr">
 	        <br><br>

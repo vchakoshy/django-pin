@@ -1,5 +1,5 @@
 {% load pin_tags %}
-<form class="form-horizontal" action="{% url pin-sendurl%}" method="post" id="pin-form-from-url">
+<form class="form-horizontal" action="{% url "pin-sendurl" %}" method="post" id="pin-form-from-url">
 {%csrf_token%}
 {{ form.errors}}
 	<div class="control-group">
@@ -33,6 +33,13 @@
 		</div>
     </div>
     
+    <div class="control-group">
+        <label class="control-label">گروه</label>
+        <div class="controls">
+            {{pin_form.category}}
+        </div>
+    </div>
+
     <div class="control-group">
 		<label class="control-label">برچسب ها: </label>
 		<div class="controls">
@@ -75,8 +82,8 @@ $("#btn-pin-url").click(function(){
 	$(this).val('لطفا صبر کنید');
 	$(this).addClass('disabled');
 	
-	url = $("#url").val();
-	$.post('{% url pin-sendurl-a%}',{'url':url}, parse_data, 'json');
+	 url = $("#url").val();
+	$.post('{% url "pin-sendurl-a" %}',{'url':url}, parse_data, 'json');
 	
 });
 var images = [];

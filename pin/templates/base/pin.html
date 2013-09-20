@@ -8,7 +8,7 @@
 	<title>ویسگون {% block title%}{% endblock%}</title>
 	<meta name="keywords" content="social,rss,reader" />
 	<meta name="description" content="{%block description%}what is going on, social rss reader{%endblock%}" />
-<link rel="alternate" type="application/rss+xml" href="{% url pin-latest-feed%}" />
+<link rel="alternate" type="application/rss+xml" href="{% url "pin-latest-feed%}"" />
 {% block opengraph%}{% endblock opengraph%}
 
 {% include "base/all_header.html"%}
@@ -55,7 +55,7 @@
 					</form>
 				</li>
 				<li class="nav-right">
-					<a href="{% url pin-home %}">آخرین مطالب</a></li>
+					<a href="{% url "pin-home" %}">آخرین مطالب</a></li>
 			  <li class="nav-right">
 			  {% if user.is_authenticated%}
 			  	<a data-toggle="modal" data-target="#myModal" href="#myModal"><i class="icon-plus-sign"></i> ارسال مطلب جدید </a>
@@ -72,15 +72,15 @@
 			  </li>
 
 <li class="nav-right">
-	<a href="{% url pin-popular%}"><i class="icon-fire"></i> برترینها</a>
+	<a href="{% url "pin-popular%}""><i class="icon-fire"></i> برترینها</a>
 </li>
 			  
 {% if user.is_authenticated%}
 <li class="nav-right">
-	<a href="{% url pin-following%}">دنبال شوندگان</a>
+	<a href="{% url "pin-following%}"">دنبال شوندگان</a>
 </li>
 <li class="nav-right">
-	<a href="#notify" data-load="{% url show_notify%}" title="اعلانات" class="popnotify"><i class="icon-bell"> </i> {{user.id|get_user_notify}} </a>
+	<a href="#notify" data-load="{% url "show_notify%}"" title="اعلانات" class="popnotify"><i class="icon-bell"> </i> {{user.id|get_user_notify}} </a>
 </li>
 {%endif%}
 			  

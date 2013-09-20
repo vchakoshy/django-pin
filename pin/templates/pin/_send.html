@@ -1,5 +1,5 @@
 {% load pin_tags%}
-<form method="post" class="form-horizontal" action="{% url pin-send%}" id="pin_form" >
+<form method="post" class="form-horizontal" action="{% url "pin-send" %}" id="pin_form" >
 {% csrf_token%}
 	<div class="control-group">
       	{{ form.errors}}
@@ -30,6 +30,13 @@
 			<input type="text" name="url" placeholder="URL" class="span3 ltr">
 		</div>
 	</div>
+
+    <div class="control-group">
+        <label class="control-label">گروه </label>
+        <div class="controls">
+            {{pin_form.category}}
+        </div>
+    </div>
 	
 	<div class="control-group">
 		<label class="control-label">برچسب ها: </label>
@@ -45,55 +52,3 @@
 </div>
 </form>
 
-{% load compress %}
-{% compress js inline%}
-<script type="text/javascript">
-var image_selected=0;
-$("#pin_form").submit(function(){
-	if(image_selected == 0){
-		alert('لطفا یک تصویر انتخاب کنید');
-		return false;
-		
-	}else{
-		return true;
-	}
-});
-
-$('#textarea').textext({ plugins: 'tags' });
-
-</script>
-
-<script>
-function createUploader(){            
-	var uploader = new qq.FileUploader({
-	element: document.getElementById('file-uploader'),
-	action: '{% url pin-upload%}',
-	debug: true,
-	multiple: false,
-	allowedExtensions : ['png','jpg'],
-	sizeLimit : 1024*1024*10,
-	messages : {
-		'typeError':'{file} برای بارگذاری مناسب نیست. تنها {extensions} فرمت ها مجاز هستند.',
-		'sizeError':'{file} بسیار حجیم است. فایل شما باید کمتر از {sizeLimit} باشد.',
-		'minSizeError':'{file} بسیار کوچک است. فایل شما باید بیشتر از {minSizeLimit} باشد.',
-		'emptyError':'{file} فایل خالی است!',
-		'onLeave':'فایل در حال بارگذاری است. در صورت ترک صفحه این عملیات لغو می شود.'},
-	showMessage:function(message){ 
-		alert(message); 
-	},
-	onComplete : function(id, fileName, responseJSON){
-		if(responseJSON.success)
-		{
-			$('#file-uploader').hide();
-            $('.uploaded-image').html('<img src="/media/pin/temp/t/'+responseJSON.file+'">');
-			$('#image_field').val(responseJSON.file);
-			image_selected=1;
-		}else{
-			alert('خطا هنگام ذخیره فایل.');
-        }
-	}
-	});           
-}
-createUploader();     
-</script>
-{%endcompress%}

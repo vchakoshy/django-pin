@@ -1,0 +1,34 @@
+{% extends "base/pin.html"%}
+{% load pin_tags %}
+
+{% block extra_js %}
+ <script src="{{MEDIA_URL}}js/jquery.masonry.min.js"></script>
+<!-- <script src="{{MEDIA_URL}}js/masonry.pkgd.min.js"></script>-->
+{% endblock extra_js %}
+
+{% block title%} - تصاویر مورد علاقه {{user_id|get_username}}{% endblock title%}
+
+{%block pin-ex-nav%}
+<li class="nav-right active">
+	<a href="{% url "pin-user" user_id %}"><h1>تصاویر مورد علاقه {{user_id|get_username}}</h1></a>
+</li>
+{%endblock pin-ex-nav%}
+
+{% block content %}
+
+<script type="text/javascript">
+var start_loading=0;
+</script>
+
+<div class="row row-fluid">
+	<div class="span12">
+		<div id="feed-ul">
+			{% include "pin/_items.html"%}
+		</div>
+	</div>
+</div>
+
+{% include "pin/feed_scripts.html" %}
+{% include "pin/pin_scripts.html" %}
+
+{% endblock content %}
